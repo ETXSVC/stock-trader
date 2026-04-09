@@ -92,6 +92,9 @@ A Python/React application that samples 500 stocks 3 times daily (market open, m
 - `GET /api/samples/latest` — latest sample for each stock
 - `POST /api/samples/trigger` — manually trigger a sample run
 
+### Top Movers
+- `GET /api/samples/top-movers` — returns top movers (query params: type=gainers|losers|active, limit=10|25|50)
+
 ### Alerts
 - `GET /api/alerts` — list all alerts
 - `POST /api/alerts` — create alert
@@ -139,6 +142,13 @@ Error handling: log failures per-ticker, continue with remaining batches. Retry 
 - List all alerts with status
 - Create/edit/delete alerts
 - Notification history with dismiss functionality
+
+### Top Movers
+- Ranked list of stocks with largest absolute day_change_pct (gainers and losers)
+- Toggle between: Top Gainers, Top Losers, Most Active (by volume)
+- Configurable count (top 10, 25, 50)
+- Sparkline mini-charts showing intraday movement (open -> mid -> close)
+- Click any stock to navigate to its detail page
 
 ### Settings
 - Add/remove custom tickers
