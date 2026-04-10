@@ -5,7 +5,7 @@ REM Create logs directory first
 if not exist "%~dp0logs" mkdir "%~dp0logs"
 
 REM Start backend in a new window
-start "Backend" cmd /k "cd /d %~dp0 && uvicorn backend.main:app --reload --port 8000"
+start "Backend" cmd /k "cd /d %~dp0 && "%LOCALAPPDATA%\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\Scripts\uvicorn.exe" backend.main:app --reload --port 8000"
 
 REM Wait for backend to initialize before starting frontend
 timeout /t 4 /nobreak > nul
