@@ -60,3 +60,14 @@ class Notification(Base):
 
     alert = relationship("Alert", back_populates="notifications")
     stock = relationship("Stock")
+
+
+class ScheduledJob(Base):
+    __tablename__ = "scheduled_jobs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    label = Column(String, nullable=False)       # display name, e.g. "Market Open"
+    sample_type = Column(String, nullable=False)  # "open", "mid", "close", or any custom label
+    hour = Column(Integer, nullable=False)        # 0-23, stored in UTC
+    minute = Column(Integer, nullable=False)      # 0-59
+    enabled = Column(Boolean, default=True)

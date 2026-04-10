@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const resp = await fetch(`${BASE_URL}${path}`, {
@@ -60,4 +60,12 @@ export const api = {
     const qs = params ? "?" + new URLSearchParams(params).toString() : "";
     return `${BASE_URL}/api/export/csv${qs}`;
   },
+
+  getSchedules: () => request<any[]>("/api/schedules"),
+  createSchedule: (data: { label: string; sample_type: string; hour: number; minute: number }) =>
+    request<any>("/api/schedules", { method: "POST", body: JSON.stringify(data) }),
+  updateSchedule: (id: number, data: Record<string, any>) =>
+    request<any>(`/api/schedules/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteSchedule: (id: number) =>
+    request<any>(`/api/schedules/${id}`, { method: "DELETE" }),
 };

@@ -97,3 +97,30 @@ class NotificationResponse(BaseModel):
 # --- Trigger ---
 class TriggerRequest(BaseModel):
     sample_type: str = "mid"  # open, mid, close
+
+
+# --- ScheduledJob ---
+class ScheduledJobCreate(BaseModel):
+    label: str
+    sample_type: str = "mid"
+    hour: int       # 0-23 UTC
+    minute: int     # 0-59
+
+
+class ScheduledJobUpdate(BaseModel):
+    label: Optional[str] = None
+    sample_type: Optional[str] = None
+    hour: Optional[int] = None
+    minute: Optional[int] = None
+    enabled: Optional[bool] = None
+
+
+class ScheduledJobResponse(BaseModel):
+    id: int
+    label: str
+    sample_type: str
+    hour: int
+    minute: int
+    enabled: bool
+
+    model_config = {"from_attributes": True}
