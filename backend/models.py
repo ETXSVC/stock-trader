@@ -15,7 +15,7 @@ class Stock(Base):
     active = Column(Boolean, default=True)
 
     samples = relationship("Sample", back_populates="stock", cascade="all, delete-orphan")
-    alerts = relationship("Alert", back_populates="stock", cascade="all, delete-orphan")
+    alerts = relationship("Alert", back_populates="stock", cascade="all")
 
 
 class Sample(Base):
