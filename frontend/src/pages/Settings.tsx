@@ -31,7 +31,9 @@ function SchedulesSection() {
   const [editHour, setEditHour] = useState(0);
   const [editMinute, setEditMinute] = useState(0);
 
-  const load = () => api.getSchedules().then(setJobs).catch(() => {});
+  const load = () => api.getSchedules()
+    .then(jobs => setJobs([...jobs].sort((a, b) => a.hour !== b.hour ? a.hour - b.hour : a.minute - b.minute)))
+    .catch(() => {});
   useEffect(() => { load(); }, []);
 
   const handleAdd = async (e: React.FormEvent) => {
