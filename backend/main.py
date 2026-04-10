@@ -3,6 +3,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from backend.database import engine, Base
 from backend.websocket_manager import ws_manager
+from backend.scheduler import setup_scheduler, scheduler
 from backend.routes import stocks, samples, alerts, notifications, export
 import os
 
@@ -10,7 +11,9 @@ import os
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
+    setup_scheduler()
     yield
+    scheduler.shutdown()
 
 
 app = FastAPI(title="Stock Sampler Bot", lifespan=lifespan)
