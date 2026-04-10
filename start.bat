@@ -1,35 +1,20 @@
 @echo off
 echo Starting Stock Trader servers...
 
-REM Start backend and capture PID
-start /b cmd /c "cd /d %~dp0 && uvicorn backend.main:app --reload --port 8000 > logs\backend.log 2>&1"
-timeout /t 1 /nobreak > nul
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":8000 "') do (
-    set BACKEND_PID=%%a
-    goto :got_backend
-)
-:got_backend
-
-REM Wait for backend to initialize
-timeout /t 3 /nobreak > nul
-
-REM Start frontend and capture PID
-start /b cmd /c "cd /d %~dp0frontend && npm run dev > ..\logs\frontend.log 2>&1"
-timeout /t 2 /nobreak > nul
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":5173 "') do (
-    set FRONTEND_PID=%%a
-    goto :got_frontend
-)
-:got_frontend
-
-REM Save PIDs for stop.bat
+REM Create logs directory first
 if not exist "%~dp0logs" mkdir "%~dp0logs"
-echo %BACKEND_PID% > "%~dp0.pids"
-echo %FRONTEND_PID% >> "%~dp0.pids"
+
+REM Start backend in a new window
+start "Backend" cmd /k "cd /d %~dp0 && uvicorn backend.main:app --reload --port 8000"
+
+REM Wait for backend to initialize before starting frontend
+timeout /t 4 /nobreak > nul
+
+REM Start frontend in a new window
+start "Frontend" cmd /k "cd /d %~dp0frontend && npm run dev"
 
 echo.
-echo Backend:  http://localhost:8000  (PID %BACKEND_PID%)
-echo Frontend: http://localhost:5173  (PID %FRONTEND_PID%)
-echo Logs:     logs\backend.log and logs\frontend.log
+echo Backend:  http://localhost:8000
+echo Frontend: http://localhost:5173
 echo.
-echo Run stop.bat to shut down both servers.
+echo Close the server windows or run stop.bat to shut down.
