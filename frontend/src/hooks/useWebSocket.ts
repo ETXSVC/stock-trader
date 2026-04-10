@@ -13,7 +13,8 @@ export function useWebSocket(onMessage?: (msg: WsMessage) => void) {
     let reconnectTimeout: ReturnType<typeof setTimeout>;
 
     const connect = () => {
-      ws = new WebSocket("ws://localhost:8000/ws");
+      const wsUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/appws`;
+      ws = new WebSocket(wsUrl);
       ws.onopen = () => setConnected(true);
       ws.onclose = () => {
         setConnected(false);

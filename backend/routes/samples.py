@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, asc, func
 from datetime import datetime, timezone
-from backend.database import get_db
+from backend.database import get_db, SessionLocal
 from backend.models import Stock, Sample
 from backend.schemas import SampleWithTicker, TopMoverResponse, TriggerRequest
 from backend.sampler import run_sample
 from backend.alert_engine import evaluate_alerts
 from backend.websocket_manager import ws_manager
+import asyncio
 
 router = APIRouter(prefix="/api/samples", tags=["samples"])
 
@@ -108,19 +109,27 @@ def top_movers(type: str = "gainers", limit: int = 10, db: Session = Depends(get
     return results
 
 
-@router.post("/trigger")
-async def trigger_sample(req: TriggerRequest, db: Session = Depends(get_db)):
-    samples = run_sample(db, req.sample_type)
-    notifications = evaluate_alerts(db, samples)
-    await ws_manager.broadcast("sample_complete", {
-        "sample_type": req.sample_type,
-        "count": len(samples),
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-    })
-    for n in notifications:
-        await ws_manager.broadcast("alert_triggered", {
-            "message": n.message,
-            "stock_id": n.stock_id,
-            "triggered_at": n.triggered_at.isoformat() if n.triggered_at else None,
+async def _run_sample_background(sample_type: str) -> None:
+    db = SessionLocal()
+    try:
+        samples = run_sample(db, sample_type)
+        notifications = evaluate_alerts(db, samples)
+        await ws_manager.broadcast("sample_complete", {
+            "sample_type": sample_type,
+            "count": len(samples),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         })
-    return {"detail": f"Sampled {len(samples)} stocks, {len(notifications)} alerts triggered"}
+        for n in notifications:
+            await ws_manager.broadcast("alert_triggered", {
+                "message": n.message,
+                "stock_id": n.stock_id,
+                "triggered_at": n.triggered_at.isoformat() if n.triggered_at else None,
+            })
+    finally:
+        db.close()
+
+
+@router.post("/trigger")
+async def trigger_sample(req: TriggerRequest, background_tasks: BackgroundTasks):
+    background_tasks.add_task(_run_sample_background, req.sample_type)
+    return {"detail": f"Sample triggered for '{req.sample_type}' — running in background"}
