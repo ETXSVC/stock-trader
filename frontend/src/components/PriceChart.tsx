@@ -2,11 +2,14 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { parseUTC } from "../utils/time";
 
 export function PriceChart({ data }: { data: { timestamp: string; price: number | null }[] }) {
-  const formatted = data.map((d) => ({
-    ...d,
-    time: parseUTC(d.timestamp).toLocaleDateString(),
-    fullTime: parseUTC(d.timestamp).toLocaleString(),
-  }));
+  const formatted = data.map((d) => {
+    const dt = parseUTC(d.timestamp);
+    return {
+      ...d,
+      time: dt.toLocaleString([], { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }),
+      fullTime: dt.toLocaleString(),
+    };
+  });
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={formatted}>

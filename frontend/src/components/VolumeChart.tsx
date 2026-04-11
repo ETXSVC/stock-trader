@@ -2,11 +2,14 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { parseUTC } from "../utils/time";
 
 export function VolumeChart({ data }: { data: { timestamp: string; volume: number | null }[] }) {
-  const formatted = data.map((d) => ({
-    ...d,
-    time: parseUTC(d.timestamp).toLocaleDateString(),
-    fullTime: parseUTC(d.timestamp).toLocaleString(),
-  }));
+  const formatted = data.map((d) => {
+    const dt = parseUTC(d.timestamp);
+    return {
+      ...d,
+      time: dt.toLocaleString([], { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }),
+      fullTime: dt.toLocaleString(),
+    };
+  });
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={formatted}>
