@@ -12,9 +12,21 @@ scheduler = AsyncIOScheduler()
 
 
 async def _run_scheduled_sample(sample_type: str) -> None:
-    logger.info(f"Running scheduled '{sample_type}' sample")
+    from backend.models import Sample
+    from datetime import timedelta
     db = SessionLocal()
     try:
+        # Dedup: skip if this sample_type already ran in the last 5 minutes
+        cutoff = datetime.now(timezone.utc) - timedelta(minutes=5)
+        recent = db.query(Sample).filter(
+            Sample.sample_type == sample_type,
+            Sample.timestamp >= cutoff,
+        ).first()
+        if recent:
+            logger.info(f"Skipping '{sample_type}' — already ran within 5 minutes")
+            return
+
+        logger.info(f"Running scheduled '{sample_type}' sample")
         samples = run_sample(db, sample_type)
         notifications = evaluate_alerts(db, samples)
         await ws_manager.broadcast("sample_complete", {

@@ -46,8 +46,8 @@ def _fetch_batch(
     try:
         raw = yf.download(
             tickers,
-            period="2d",
-            interval="1d",
+            period="1d",
+            interval="1m",
             auto_adjust=True,
             progress=False,
             group_by="ticker",
@@ -83,7 +83,8 @@ def _fetch_batch(
 
             day_change_pct = None
             if len(df) >= 2:
-                prev_close = float(df.iloc[-2]["Close"])
+                # Use the first bar of the day as the open reference for intraday % change
+                prev_close = float(df.iloc[0]["Open"]) if not pd.isna(df.iloc[0]["Open"]) else None
                 if prev_close:
                     day_change_pct = round(((price - prev_close) / prev_close) * 100, 4)
 
