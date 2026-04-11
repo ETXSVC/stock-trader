@@ -1,10 +1,11 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { parseUTC } from "../utils/time";
 
 export function PriceChart({ data }: { data: { timestamp: string; price: number | null }[] }) {
   const formatted = data.map((d) => ({
     ...d,
-    time: new Date(d.timestamp).toLocaleDateString(),
-    fullTime: new Date(d.timestamp).toLocaleString(),
+    time: parseUTC(d.timestamp).toLocaleDateString(),
+    fullTime: parseUTC(d.timestamp).toLocaleString(),
   }));
   return (
     <ResponsiveContainer width="100%" height={300}>

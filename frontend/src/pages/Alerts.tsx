@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { api } from "../api/client";
 import { AlertForm } from "../components/AlertForm";
+import { parseUTC } from "../utils/time";
 
 export function Alerts() {
   const [alerts, setAlerts] = useState<any[]>([]);
@@ -77,7 +78,7 @@ export function Alerts() {
         <tbody>
           {notifications.map((n) => (
             <tr key={n.id} style={{ background: n.read ? "#fff" : "#e3f2fd" }}>
-              <td style={td}>{new Date(n.triggered_at).toLocaleString()}</td>
+              <td style={td}>{parseUTC(n.triggered_at).toLocaleString()}</td>
               <td style={td}>{n.ticker ?? "—"}</td>
               <td style={td}>{n.message}</td>
               <td style={td}>{n.read ? "Read" : (

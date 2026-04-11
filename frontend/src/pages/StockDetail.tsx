@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { api } from "../api/client";
 import { PriceChart } from "../components/PriceChart";
 import { VolumeChart } from "../components/VolumeChart";
+import { parseUTC } from "../utils/time";
 
 export function StockDetail() {
   const { ticker } = useParams<{ ticker: string }>();
@@ -55,8 +56,8 @@ export function StockDetail() {
               {samples.map((s: any) => (
                 <tr key={s.id}>
                   <td style={td}>
-                    <div>{new Date(s.timestamp).toLocaleDateString()}</div>
-                    <div style={{ fontSize: 11, color: "#888" }}>{new Date(s.timestamp).toLocaleTimeString()}</div>
+                    <div>{parseUTC(s.timestamp).toLocaleDateString()}</div>
+                    <div style={{ fontSize: 11, color: "#888" }}>{parseUTC(s.timestamp).toLocaleTimeString()}</div>
                   </td>
                   <td style={td}>{s.sample_type}</td>
                   <td style={td}>{s.price != null ? `$${s.price.toFixed(2)}` : "—"}</td>

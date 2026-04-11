@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { parseUTC } from "../utils/time";
 import { api } from "../api/client";
 import { StockTable } from "../components/StockTable";
 import { useWebSocket } from "../hooks/useWebSocket";
@@ -16,7 +17,7 @@ export function Dashboard() {
       setSamples(latest);
       setStats({
         total: latest.length,
-        lastSample: latest[0]?.timestamp ? new Date(latest[0].timestamp).toLocaleString() : "Never",
+        lastSample: latest[0]?.timestamp ? parseUTC(latest[0].timestamp).toLocaleString() : "Never",
         alertCount: alerts.filter((a: any) => a.enabled).length,
       });
     } catch {}

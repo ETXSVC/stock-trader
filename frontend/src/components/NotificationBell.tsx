@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../api/client";
+import { parseUTC } from "../utils/time";
 
 export function NotificationBell() {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -50,7 +51,7 @@ export function NotificationBell() {
           {notifications.map((n) => (
             <div key={n.id} style={{ padding: "8px 12px", borderBottom: "1px solid #f0f0f0", background: n.read ? "#fff" : "#e3f2fd" }}>
               <div style={{ fontSize: 13 }}>{n.message}</div>
-              <div style={{ fontSize: 11, color: "#999", marginTop: 2 }}>{new Date(n.triggered_at).toLocaleString()}</div>
+              <div style={{ fontSize: 11, color: "#999", marginTop: 2 }}>{parseUTC(n.triggered_at).toLocaleString()}</div>
             </div>
           ))}
         </div>
