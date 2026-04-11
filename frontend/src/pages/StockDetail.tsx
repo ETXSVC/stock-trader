@@ -54,7 +54,10 @@ export function StockDetail() {
             <tbody>
               {samples.map((s: any) => (
                 <tr key={s.id}>
-                  <td style={td}>{new Date(s.timestamp).toLocaleString()}</td>
+                  <td style={td}>
+                    <div>{new Date(s.timestamp).toLocaleDateString()}</div>
+                    <div style={{ fontSize: 11, color: "#888" }}>{new Date(s.timestamp).toLocaleTimeString()}</div>
+                  </td>
                   <td style={td}>{s.sample_type}</td>
                   <td style={td}>{s.price != null ? `$${s.price.toFixed(2)}` : "—"}</td>
                   <td style={td}>{s.volume?.toLocaleString() ?? "—"}</td>
