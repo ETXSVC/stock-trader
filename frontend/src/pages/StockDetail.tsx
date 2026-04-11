@@ -26,7 +26,7 @@ export function StockDetail() {
     <div>
       <Link to="/" style={{ color: "#1976d2", textDecoration: "none", fontSize: 14 }}>← Back</Link>
       <h1 style={{ margin: "8px 0" }}>{ticker} — {latest.name}</h1>
-      <div style={{ display: "flex", gap: 24, marginBottom: 24 }}>
+      <div style={{ display: "flex", gap: 24, marginBottom: 24, alignItems: "flex-end" }}>
         <div><span style={{ color: "#666", fontSize: 13 }}>Price: </span><strong>${latest.price?.toFixed(2) ?? "—"}</strong></div>
         <div><span style={{ color: "#666", fontSize: 13 }}>Change: </span>
           <strong style={{ color: (latest.day_change_pct ?? 0) >= 0 ? "#2e7d32" : "#c62828" }}>
@@ -34,6 +34,12 @@ export function StockDetail() {
           </strong>
         </div>
         <div><span style={{ color: "#666", fontSize: 13 }}>Volume: </span><strong>{latest.volume?.toLocaleString() ?? "—"}</strong></div>
+        {latest.timestamp && (
+          <div style={{ marginLeft: "auto", textAlign: "right" }}>
+            <div style={{ fontSize: 13, color: "#666" }}>{parseUTC(latest.timestamp).toLocaleDateString()}</div>
+            <div style={{ fontSize: 12, color: "#999" }}>{parseUTC(latest.timestamp).toLocaleTimeString()}</div>
+          </div>
+        )}
       </div>
       <div style={{ background: "#fff", borderRadius: 8, padding: 16, marginBottom: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
         <h3 style={{ marginTop: 0 }}>Price History</h3>
