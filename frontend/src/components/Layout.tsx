@@ -5,6 +5,7 @@ const NAV_ITEMS = [
   { path: "/", label: "Dashboard" },
   { path: "/top-movers", label: "Top Movers" },
   { path: "/alerts", label: "Alerts" },
+  { path: "/tasks", label: "Tasks" },
   { path: "/settings", label: "Settings" },
 ];
 

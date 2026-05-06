@@ -68,4 +68,15 @@ export const api = {
     request<any>(`/api/schedules/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   deleteSchedule: (id: number) =>
     request<any>(`/api/schedules/${id}`, { method: "DELETE" }),
+
+  getTasks: (completed?: boolean) => {
+    const qs = completed !== undefined ? `?completed=${completed}` : "";
+    return request<any[]>(`/api/tasks${qs}`);
+  },
+  createTask: (data: { title: string; description?: string; priority?: string; due_date?: string }) =>
+    request<any>("/api/tasks", { method: "POST", body: JSON.stringify(data) }),
+  updateTask: (id: number, data: Record<string, any>) =>
+    request<any>(`/api/tasks/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteTask: (id: number) =>
+    request<any>(`/api/tasks/${id}`, { method: "DELETE" }),
 };

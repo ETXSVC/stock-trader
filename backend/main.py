@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.database import engine, Base
 from backend.websocket_manager import ws_manager
 from backend.scheduler import setup_scheduler, scheduler
-from backend.routes import stocks, samples, alerts, notifications, export, schedules
+from backend.routes import stocks, samples, alerts, notifications, export, schedules, tasks
 import os
 
 
@@ -51,6 +51,7 @@ app.include_router(alerts.router)
 app.include_router(notifications.router)
 app.include_router(export.router)
 app.include_router(schedules.router)
+app.include_router(tasks.router)
 
 
 @app.websocket("/appws")

@@ -71,3 +71,15 @@ class ScheduledJob(Base):
     hour = Column(Integer, nullable=False)        # 0-23, stored in UTC
     minute = Column(Integer, nullable=False)      # 0-59
     enabled = Column(Boolean, default=True)
+
+
+class Task(Base):
+    __tablename__ = "tasks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    description = Column(String, default="")
+    priority = Column(String, default="medium")  # low, medium, high
+    due_date = Column(String, nullable=True)      # ISO date string "YYYY-MM-DD"
+    completed = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))

@@ -5,6 +5,7 @@ import { StockDetail } from "./pages/StockDetail";
 import { TopMovers } from "./pages/TopMovers";
 import { Alerts } from "./pages/Alerts";
 import { Settings } from "./pages/Settings";
+import { Tasks } from "./pages/Tasks";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/top-movers" element={<TopMovers />} />
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/tasks" element={<Tasks />} />
         </Route>
       </Routes>
     </BrowserRouter>

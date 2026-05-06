@@ -124,3 +124,31 @@ class ScheduledJobResponse(BaseModel):
     enabled: bool
 
     model_config = {"from_attributes": True}
+
+
+# --- Task ---
+class TaskCreate(BaseModel):
+    title: str
+    description: str = ""
+    priority: str = "medium"   # low, medium, high
+    due_date: Optional[str] = None
+
+
+class TaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    priority: Optional[str] = None
+    due_date: Optional[str] = None
+    completed: Optional[bool] = None
+
+
+class TaskResponse(BaseModel):
+    id: int
+    title: str
+    description: str
+    priority: str
+    due_date: Optional[str] = None
+    completed: bool
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
